@@ -96,6 +96,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
                     MponLog.d("break");
                     break;
                 }
+                curPos++;
             }else {
                 autualHeight += height;
                 tmpNum++;
@@ -143,96 +144,6 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
 
     private int looperLeftStartPos =0;
     private int looperRightEndPos =0;
-
-    private int fillNew(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-
-        if (dx > 0) {
-            //标注1.向左滚动
-            int lastPos = getPosition(getChildAt(posChildMap.get(2).get(posChildMap.get(2).size()-1)));//右下角是最后一个决定最后一个位置
-            MponLog.d("lastPos : "+lastPos);
-            for (int j = 0;j < rowNum;j++){
-                View lastView = getChildAt(posChildMap.get(j).get(posChildMap.get(j).size()-1));
-                if (lastView == null) {
-                    MponLog.d("fillNew 1");
-                    return 0;
-                }
-                //标注2.可见的最后一个itemView完全滑进来了，需要补充新的
-                if (lastView.getRight() < getWidth()) {
-                    View scrap = null;
-                    //标注3.判断可见的最后一个itemView的索引，
-                    // 如果是最后一个，则将下一个itemView设置为第一个，否则设置为当前索引的下一个
-                    int getViewPosition;
-                    if (lastPos == getItemCount() - 1) {
-                        if (looperEnable) {
-                            MponLog.d("looperLeftStartPos : "+looperLeftStartPos);
-                            getViewPosition = looperLeftStartPos++;
-                            MponLog.d("getViewPosition : "+getViewPosition);
-                            scrap = recycler.getViewForPosition(getViewPosition);
-                            posChildMap.get(j).add(getViewPosition);
-                        } else {
-                            dx = 0;
-                        }
-                    } else {
-                        getViewPosition = lastPos + 1;
-                        lastPos++;
-
-                        scrap = recycler.getViewForPosition(getViewPosition);
-                        posChildMap.get(j).add(getViewPosition);
-                        MponLog.d("getViewPosition 1 : "+getViewPosition);
-                    }
-
-                    //标注4.将新的itemViewadd进来并对其测量和布局
-                    if (scrap != null){
-                        MponLog.d("add 1 : ");
-                        addView(scrap);
-                        measureChildWithMargins(scrap, 0, 0);
-                        int width = getDecoratedMeasuredWidth(scrap);
-                        int height = getDecoratedMeasuredHeight(scrap);
-
-                        layoutDecorated(scrap,lastView.getRight(), 0+j*height, lastView.getRight() + width, height+j*height);
-                    }
-                }
-            }
-            return dx;
-        } else {
-            //向右滚动
-            int firstPos = getPosition(getChildAt(posChildMap.get(0).get(posChildMap.get(0).size()-1)));//左上角是第一个决定第一个位置
-            for (int j = 0;j < rowNum;j++){
-                View firstView = getChildAt(posChildMap.get(j).get(0));
-                if (firstView == null) {
-                    MponLog.d("fillNew 2");
-                    return 0;
-                }
-
-
-                if (firstView.getLeft() >= 0) {
-                    View scrap = null;
-                    int getViewPosition;
-                    if (firstPos == 0) {
-                        if (looperEnable) {
-                            getViewPosition = looperRightEndPos--;
-                            scrap = recycler.getViewForPosition(getViewPosition);
-                            posChildMap.get(j).add(0,getViewPosition);
-                        } else {
-                            dx = 0;
-                        }
-                    } else {
-                        getViewPosition = firstPos-1;
-                        scrap = recycler.getViewForPosition(getViewPosition);
-                        posChildMap.get(j).add(0,getViewPosition);
-                    }
-                    if (scrap != null) {
-                        addView(scrap, 0);
-                        measureChildWithMargins(scrap,0,0);
-                        int width = getDecoratedMeasuredWidth(scrap);
-                        int height = getDecoratedMeasuredHeight(scrap);
-                        layoutDecorated(scrap, firstView.getLeft() - width, 0+j*height, firstView.getLeft(), height+j*height);
-                    }
-                }
-            }
-            return dx;
-            }
-    }
 
     /**
      * 左右滑动的时候，填充
@@ -356,6 +267,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
             if (dx > 0) {
                 //向左滚动，移除一个左边不在内容里的view
                 if (view.getRight() < 0) {
+                    MponLog.d("循环: 移除前 一个view  childCount=" + getChildCount()+ ", position : "+position);
                     removeAndRecycleView(view, recycler);
                     MponLog.d("循环: 移除 一个view  childCount=" + getChildCount()+ ", position : "+position);
                 }
