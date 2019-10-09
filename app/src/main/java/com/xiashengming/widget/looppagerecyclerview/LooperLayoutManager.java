@@ -283,7 +283,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
                 }
             } else {
                 //向右滚动，移除一个右边不在内容里的view
-                if (view.getLeft() > getWidth()) {
+                if (view.getLeft() > (getWidth()+view.getWidth())) {
                     removeAndRecycleView(view, recycler);
 //                    MponLog.d("循环: 移除 一个view  childCount=" + getChildCount()+ ", position : "+position);
                 }
