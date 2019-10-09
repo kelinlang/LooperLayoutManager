@@ -106,7 +106,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
         int travl = 0;
         try {
 
-//            MponLog.d(" getChildCount : "+ getChildCount());
+            MponLog.d(" getChildCount : "+ getChildCount());
 //            recyclerHideViewNew(dx, recycler, state);
             travl = fill(dx, recycler, state);
         }catch (Exception e){
@@ -128,6 +128,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
         }catch (Exception e){
             MponLog.e("",e);
         }
+        MponLog.d(" getChildCount : "+ getChildCount());
         return travl;
     }
 
@@ -275,16 +276,16 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
 
             if (dx > 0) {
                 //向左滚动，移除一个左边不在内容里的view
-                if (view.getRight() < 0) {
-                    MponLog.d("循环: 移除前 一个view  childCount=" + getChildCount()+ ", position : "+position);
+                if (view.getRight() < -view.getWidth()) {
+//                    MponLog.d("循环: 移除前 一个view  childCount=" + getChildCount()+ ", position : "+position);
                     removeAndRecycleView(view, recycler);
-                    MponLog.d("循环: 移除 一个view  childCount=" + getChildCount()+ ", position : "+position);
+//                    MponLog.d("循环: 移除 一个view  childCount=" + getChildCount()+ ", position : "+position);
                 }
             } else {
                 //向右滚动，移除一个右边不在内容里的view
                 if (view.getLeft() > getWidth()) {
                     removeAndRecycleView(view, recycler);
-                    MponLog.d("循环: 移除 一个view  childCount=" + getChildCount()+ ", position : "+position);
+//                    MponLog.d("循环: 移除 一个view  childCount=" + getChildCount()+ ", position : "+position);
                 }
             }
         }
