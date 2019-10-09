@@ -1,8 +1,11 @@
 package com.xiashengming.widget;
 
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+//import android.support.v7.widget.RecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.xiashengming.widget.looppagerecyclerview.LooperLayoutManager;
 import com.xiashengming.widget.looppagerecyclerview.MyAdapter;
