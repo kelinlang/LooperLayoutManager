@@ -70,7 +70,11 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
                 int width = getDecoratedMeasuredWidth(itemView);
                 int height = getDecoratedMeasuredHeight(itemView);
 
-                layoutDecorated(itemView, autualWidth, 0+autualHeight, autualWidth + width, height+autualHeight);
+                if(tmpNum == 1){
+                    layoutDecorated(itemView, autualWidth-width/2, 0+autualHeight, autualWidth + width-width/2, height+autualHeight);
+                }else {
+                    layoutDecorated(itemView, autualWidth, 0+autualHeight, autualWidth + width, height+autualHeight);
+                }
 
                 if (tmpNum == rowNum-1){
                     autualWidth += width;
@@ -136,6 +140,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
         if (dx > 0) {
             //标注1.向左滚动
             View lastView = getChildAt(getChildCount() - 1);
+            View lastSecondView = getChildAt(getChildCount() - 2);
             if (lastView == null) {
                 return 0;
             }
@@ -143,7 +148,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
 //            MponLog.d("lastPos : "+ lastPos);
             curPos = lastPos;
             //标注2.可见的最后一个itemView完全滑进来了，需要补充新的
-            if (lastView.getRight() < getWidth()) {
+            if (lastSecondView.getRight() < getWidth()) {
                 for (int i = 0; i< rowNum;i++){
                     View scrap = null;
                     //标注3.判断可见的最后一个itemView的索引，
@@ -168,7 +173,11 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
                     measureChildWithMargins(scrap, 0, 0);
                     int width = getDecoratedMeasuredWidth(scrap);
                     int height = getDecoratedMeasuredHeight(scrap);
-                    layoutDecorated(scrap,lastView.getRight(), 0 + i*height, lastView.getRight() + width, height + i *height);
+                    if (i==1){
+                        layoutDecorated(scrap,lastView.getRight()-width/2, 0 + i*height, lastView.getRight() + width-width/2, height + i *height);
+                    }else {
+                        layoutDecorated(scrap,lastView.getRight(), 0 + i*height, lastView.getRight() + width, height + i *height);
+                    }
                 }
                 return dx;
             }
@@ -202,7 +211,11 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
                     measureChildWithMargins(scrap,0,0);
                     int width = getDecoratedMeasuredWidth(scrap);
                     int height = getDecoratedMeasuredHeight(scrap);
-                    layoutDecorated(scrap, firstView.getLeft() - width, 0+ (rowNum-1 -i)*height, firstView.getLeft(), height+ (rowNum-1 -i)*height);
+                    if (i==1){
+                        layoutDecorated(scrap, firstView.getLeft() - width- width/2, 0+ (rowNum-1 -i)*height, firstView.getLeft()-width/2, height+ (rowNum-1 -i)*height);
+                    }else {
+                        layoutDecorated(scrap, firstView.getLeft() - width, 0+ (rowNum-1 -i)*height, firstView.getLeft(), height+ (rowNum-1 -i)*height);
+                    }
                 }
             }
         }
