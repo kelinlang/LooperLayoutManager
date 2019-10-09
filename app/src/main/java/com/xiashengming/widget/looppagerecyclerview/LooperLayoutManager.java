@@ -42,7 +42,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        MponLog.d("onLayoutChildren  ItemCount : " + getItemCount());
+//        MponLog.d("onLayoutChildren  ItemCount : " + getItemCount());
         if (getItemCount() <= 0) {
             return;
         }
@@ -58,10 +58,10 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
 
         int autualWidth = 0;
         int autualHeight = 0;
-        MponLog.d("getWidth : "+ getWidth());
+//        MponLog.d("getWidth : "+ getWidth());
         for (;autualWidth < getWidth();){
             for (int i = 0; i < getItemCount(); i++) {
-                MponLog.d("I : "+i +" ,autualWidth : "+ autualWidth+" ,autualHeight : "+ autualHeight);
+//                MponLog.d("I : "+i +" ,autualWidth : "+ autualWidth+" ,autualHeight : "+ autualHeight);
                 View itemView = recycler.getViewForPosition(i);
                 addView(itemView);
                 measureChildWithMargins(itemView, 0, 0);
@@ -82,7 +82,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
                     tmpNum = 0;
 
                     if (autualWidth > getWidth()){
-                        MponLog.d("break");
+//                        MponLog.d("break");
                         break;
                     }
 //                    curPos++;
@@ -106,7 +106,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
         int travl = 0;
         try {
 
-            MponLog.d(" getChildCount : "+ getChildCount());
+//            MponLog.d(" getChildCount : "+ getChildCount());
 //            recyclerHideViewNew(dx, recycler, state);
             travl = fill(dx, recycler, state);
         }catch (Exception e){
@@ -226,6 +226,43 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
 
 
 
+    /*private void recyclerHideView(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        int tmpNum = 0;
+        if (dx > 0){
+            //向左滚动，移除一个左边不在内容里的view
+//            MponLog.d("向左 循环: 移除前 一个view  childCount=" + getChildCount());
+            for (int i = 0; i < getChildCount();) {
+                View view = getChildAt(i);
+                if (view != null && view.getRight() < 0 && getChildAt(i+1).getRight() < 0 && getChildAt(i+2).getRight() < 0){
+                    MponLog.d("向左 循环: 移除前 一个view  childCount=" + getChildCount()+ ", position : "+i);
+                    MponLog.d("right ："+ view.getRight() + " ，"+getChildAt(i+1).getRight()+ " ，"+getChildAt(i+2).getRight());
+                    MponLog.d("position ："+ getPosition(view) + " ，"+getPosition(getChildAt(i+1))+ " ，"+getPosition(getChildAt(i+2)));
+                    removeAndRecycleView(view, recycler);
+                    removeAndRecycleView(getChildAt(i+1), recycler);
+                    removeAndRecycleView(getChildAt(i+2), recycler);
+//                    i += rowNum;
+                    break;
+                }else {
+                    break;
+                }
+            }
+        }else {
+            //向右滚动，移除一个右边不在内容里的view
+            tmpNum = getChildCount() -1;
+            for (int i = tmpNum; i >=0;) {
+//                MponLog.d("循环: 移除前 一个view  childCount=" + getChildCount()+ ", position : "+i);
+                View view = getChildAt(i-1);
+                if(view != null && view.getLeft() > getWidth()){
+                    removeAndRecycleView(getChildAt(i), recycler);
+                    removeAndRecycleView(view, recycler);
+                    removeAndRecycleView(getChildAt(i-2), recycler);
+                    i -= rowNum;
+                }else {
+                    break;
+                }
+            }
+        }
+    }*/
 
 
     private void recyclerHideView(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
@@ -251,6 +288,5 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
                 }
             }
         }
-
     }
 }
