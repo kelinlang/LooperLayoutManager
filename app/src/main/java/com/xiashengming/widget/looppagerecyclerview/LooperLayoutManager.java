@@ -6,10 +6,6 @@ import android.view.ViewGroup;
 
 import com.xiashengming.widget.MponLog;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class LooperLayoutManager extends RecyclerView.LayoutManager {
     private static final String TAG = "LooperLayoutManager";
@@ -17,12 +13,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
 
     private int rowNum = 3;
 
-//    private Map<Integer,Integer> leftPosMap = new HashMap<>();
-//    private Map<Integer,Integer> rightPosMap = new HashMap<>();
-    private List<Integer> drawPostionCache = new ArrayList<>();
 
-    private Map<Integer,List<Integer>> posMap = new HashMap<>();
-    private Map<Integer,List<Integer>> posChildMap = new HashMap<>();
 
     private int curPos;
     private int curLeftPos = 0;
@@ -62,50 +53,44 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
         //将视图分离放入scrap缓存中，以准备重新对view进行排版
         detachAndScrapAttachedViews(recycler);
 
-        posMap.put(0,new ArrayList<Integer>());
-        posMap.put(1,new ArrayList<Integer>());
-        posMap.put(2,new ArrayList<Integer>());
-
-        posChildMap.put(0,new ArrayList<Integer>());
-        posChildMap.put(1,new ArrayList<Integer>());
-        posChildMap.put(2,new ArrayList<Integer>());
 
         int tmpNum = 0;
 
         int autualWidth = 0;
         int autualHeight = 0;
         MponLog.d("getWidth : "+ getWidth());
-        for (int i = 0; i < getItemCount(); i++) {
-            MponLog.d("I : "+i +" ,autualWidth : "+ autualWidth+" ,autualHeight : "+ autualHeight);
-            View itemView = recycler.getViewForPosition(i);
-            addView(itemView);
-            measureChildWithMargins(itemView, 0, 0);
+        for (;autualWidth < getWidth();){
+            for (int i = 0; i < getItemCount(); i++) {
+                MponLog.d("I : "+i +" ,autualWidth : "+ autualWidth+" ,autualHeight : "+ autualHeight);
+                View itemView = recycler.getViewForPosition(i);
+                addView(itemView);
+                measureChildWithMargins(itemView, 0, 0);
 
 
-            int width = getDecoratedMeasuredWidth(itemView);
-            int height = getDecoratedMeasuredHeight(itemView);
+                int width = getDecoratedMeasuredWidth(itemView);
+                int height = getDecoratedMeasuredHeight(itemView);
 
-            layoutDecorated(itemView, autualWidth, 0+autualHeight, autualWidth + width, height+autualHeight);
+                layoutDecorated(itemView, autualWidth, 0+autualHeight, autualWidth + width, height+autualHeight);
 
-            if (tmpNum == rowNum-1){
-                autualWidth += width;
-                autualHeight = 0;
-                tmpNum = 0;
+                if (tmpNum == rowNum-1){
+                    autualWidth += width;
+                    autualHeight = 0;
+                    tmpNum = 0;
 
-                if (autualWidth > getWidth()){
-                    MponLog.d("break");
-                    break;
+                    if (autualWidth > getWidth()){
+                        MponLog.d("break");
+                        break;
+                    }
+//                    curPos++;
+                }else {
+                    autualHeight += height;
+                    tmpNum++;
+//                    curPos++;
                 }
-                curPos++;
-            }else {
-                autualHeight += height;
-                tmpNum++;
-                curPos++;
             }
         }
 
-        looperLeftStartPos = 0;
-        looperRightEndPos = getItemCount()-1;
+
         MponLog.d("curPos : "+ curPos +   " getChildCount : "+ getChildCount());
     }
 
@@ -142,8 +127,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
         return travl;
     }
 
-    private int looperLeftStartPos =0;
-    private int looperRightEndPos =0;
+
 
     /**
      * 左右滑动的时候，填充
@@ -226,32 +210,7 @@ public class LooperLayoutManager extends RecyclerView.LayoutManager {
     }
 
 
-    /**
-     * 回收界面不可见的view
-     */
-    private void recyclerHideViewNew(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        if (dx>0){//向左
-            MponLog.d("循环: 移除 前  childCount=" + getChildCount());
-            for (int j = 0;j < rowNum;j++){
-                View view = getChildAt(posChildMap.get(j).get(0));
-                if (view != null && view.getRight() < 0){
-                    removeAndRecycleView(view, recycler);
-                    posChildMap.get(j).remove(0);
-                }
-            }
-            MponLog.d("循环: 移除 后  childCount=" + getChildCount());
-        }else {//向右
-            MponLog.d("循环: 移除 前  childCount=" + getChildCount());
-            for (int j = 0;j < rowNum;j++){
-                View view = getChildAt(posChildMap.get(j).get(posChildMap.get(j).size()-1));
-                if (view != null && view.getLeft() > getWidth()){
-                    removeAndRecycleView(view, recycler);
-                    posChildMap.get(j).remove(posChildMap.get(j).size()-1);
-                }
-            }
-            MponLog.d("循环: 移除 后  childCount=" + getChildCount());
-        }
-    }
+
 
 
 
